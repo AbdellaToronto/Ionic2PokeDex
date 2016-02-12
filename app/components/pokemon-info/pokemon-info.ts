@@ -14,19 +14,40 @@ import {IONIC_DIRECTIVES, Page, NavParams, ViewController} from 'ionic-framework
         :host .close-icon {
             font-size: 25px;
         }
+
+        :host .stat-list ion-item {
+            padding-right: 25%;
+            min-height: 1.5em;
+        }
+
+        :host img {
+            width: auto;
+            margin: 0 auto;
+        }
+
+        :host .stat-list * {
+            margin: 0;
+        }
         `
     ],
     template:
         `
         <ion-card>
-          <ion-card-header>
-            {{pokemon.name}}
-            <ion-icon name="close" (click)="close()" class="close-icon"></ion-icon>
-          </ion-card-header>
 
-          <ion-list>
-          <ion-item>{{pokemon.url}}</ion-item>
-          </ion-list>
+        <img src="http://pokeapi.co/media/img/{{pokemon.order}}.png" (click)="close()"/>
+
+          <ion-card-content>
+            <h2 class="card-title">{{pokemon.name}}</h2>
+
+            <span>{{pokemon.chain.species.name}}</span>
+            <span *ngFor="#evo of pokemon.chain.evolves_to">{{evo.species.name}}</span>
+            <ion-list no-lines class="stat-list">
+              <ion-item *ngFor="#statObj of pokemon.stats">
+                  <span>{{statObj.stat.name}}:</span>
+                  <span item-right>{{statObj.base_stat}}</span>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
         </ion-card>
         `
 })

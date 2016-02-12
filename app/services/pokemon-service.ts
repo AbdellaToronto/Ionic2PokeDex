@@ -27,8 +27,8 @@ export class PokemonService {
 
                 return this.http.get(pokeData.species.url)
                     .map(res => res.json())
-                    .map(({capture_rate, is_baby, has_gender_differences, evolves_from_species, evolution_chain}) =>
-                        ({capture_rate, is_baby, has_gender_differences, evolves_from_species, evolution_chain}))
+                    .map(({capture_rate, order, is_baby, has_gender_differences, evolves_from_species, evolution_chain}) =>
+                        ({capture_rate, order, is_baby, has_gender_differences, evolves_from_species, evolution_chain}))
                     .flatMap(speciesData => {
 
                         return this.http.get(speciesData.evolution_chain.url)
