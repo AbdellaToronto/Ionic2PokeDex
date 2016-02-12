@@ -2,6 +2,7 @@ import {Injectable} from 'angular2/core';
 import {Http} from 'angular2/http';
 import 'rxjs/add/operator/map';
 import {BehaviorSubject} from "rxjs/Rx";
+import {LocalStorageService} from "./local-store-service";
 
 
 @Injectable()
@@ -11,10 +12,22 @@ export class PokemonService {
     public $pokemonList = new BehaviorSubject([]);
 
         constructor(
-            private http: Http
+            private http: Http,
+            private ls: LocalStorageService
         ) {
-            this.http.get(this.endpoint)
-                .map(res => res.json())
+
+            let pokeStore = ls.getLocalStore('allPokemon').share();
+            let pokeApi = this.http.get(this.endpoint)
+                .map(res => res.json());
+
+            pokeStore
+                .filter(storeData => storeData.length)
+                .subscribe(pokeList => this.$pokemonList.next(pokeList));
+
+            pokeStore
+                .filter(storeData => !storeData.length)
+                .flatMap(()=> pokeApi)
+                .flatMap(pokeList => ls.setLocalStore('allPokemon', pokeList))
                 .subscribe(pokeList => this.$pokemonList.next(pokeList));
         }
 

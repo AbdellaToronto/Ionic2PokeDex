@@ -1,9 +1,10 @@
 import {Component, Input} from 'angular2/core';
 import {IONIC_DIRECTIVES, Page, NavParams, ViewController} from 'ionic-framework/ionic';
+import {EvolutionTree} from "../evolution-tree/evolution-tree";
 
 @Page({
     selector: 'pokemon-info',
-    directives: [IONIC_DIRECTIVES],
+    directives: [IONIC_DIRECTIVES, EvolutionTree],
     styles: [
         `
         :host ion-card-header {
@@ -39,9 +40,10 @@ import {IONIC_DIRECTIVES, Page, NavParams, ViewController} from 'ionic-framework
           <ion-card-content>
             <h2 class="card-title">{{pokemon.name}}</h2>
 
-            <span>{{pokemon.chain.species.name}}</span>
-            <span *ngFor="#evo of pokemon.chain.evolves_to">{{evo.species.name}}</span>
+            <evo-tree [chain]="pokemon.chain"></evo-tree>
+
             <ion-list no-lines class="stat-list">
+              <h2>Base Stats</h2>
               <ion-item *ngFor="#statObj of pokemon.stats">
                   <span>{{statObj.stat.name}}:</span>
                   <span item-right>{{statObj.base_stat}}</span>

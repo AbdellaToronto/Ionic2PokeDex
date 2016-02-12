@@ -3,10 +3,11 @@ import {Type} from 'angular2/core';
 import {PokemonHome} from './pages/pokemon-home/pokemon-home';
 import {PokemonList} from './pages/pokemon-list/pokemon-list';
 import {PokemonService} from "./services/pokemon-service";
+import {LocalStorageService} from "./services/local-store-service";
 
 @App({
   templateUrl: 'build/app.html',
-  providers: [PokemonService], //anything injected here is just instantiated once
+  providers: [PokemonService, LocalStorageService], //anything injected here is just instantiated once
   config: {} // http://ionicframework.com/docs/v2/api/config/Config/
 })
 class MyApp {
