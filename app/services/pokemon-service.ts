@@ -21,28 +21,19 @@ export class PokemonService {
     getPokemonByUrl(pokeUrl){
         return this.http.get(pokeUrl)
             .map(res => res.json())
-            .flatMap(({
-                name,
-                moves,
-                abilities,
-                stats,
-                id,
-                location_area_encounters,
-                weight,
-                height,
-                species}) => {
+            .map(({name, moves, abilities, stats, id, location_area_encounters, weight, height, species}) =>
+                ({name, moves, abilities, stats, id, location_area_encounters, weight, height, species}))
+            .flatMap(pokeData => {
 
-                let baseData = {name, moves, abilities, stats, id, location_area_encounters, weight, height};
-
-                this.http.get(species.url)
+                return this.http.get(pokeData.species.url)
                     .map(res => res.json())
-                    .flatMap(({capture_rate, is_baby, has_gender_differences, evolution_chain}) => {
+                    .map(({capture_rate, is_baby, has_gender_differences, evolves_from_species, evolution_chain}) =>
+                        ({capture_rate, is_baby, has_gender_differences, evolves_from_species, evolution_chain}))
+                    .flatMap(speciesData => {
 
-                        let specData = {capture_rate, is_baby, has_gender_differences};
-
-                        this.http.get(evolution_chain.url)
-                            .map(res => res.json)
-                            .map(evoData => Object.assign({}, baseData, evoData, specData));
+                        return this.http.get(speciesData.evolution_chain.url)
+                            .map(res => res.json())
+                            .map(evoData => Object.assign(pokeData, speciesData, evoData));
                     })
             });
     }

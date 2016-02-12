@@ -33,6 +33,10 @@ export class PokemonList {
 
     openDetails(pokemon) {
         this.pokeService.getPokemonByUrl(pokemon.url)
+            .map(pokemon => {
+                console.log(pokemon);
+                return pokemon;
+            })
             .map(pokemon => Modal.create(PokemonInfo, { pokemon } )) //{ pokemon } === {pokemon: pokemon}
             .subscribe(pokeModal => this.nav.present(pokeModal));
     }
