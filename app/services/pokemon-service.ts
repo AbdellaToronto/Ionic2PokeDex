@@ -29,9 +29,14 @@ export class PokemonService {
                 .flatMap(()=> pokeApi)
                 .flatMap(pokeList => ls.setLocalStore('allPokemon', pokeList))
                 .subscribe(pokeList => this.$pokemonList.next(pokeList));
+
+
+
         }
 
     getPokemonByUrl(pokeUrl){
+        let pokeNum = Number(pokeUrl.match(RegExp(/[0-9]+/, 'g')).pop()); //gets the pokemons actual id from the url, used for getting image asset
+
         return this.http.get(pokeUrl)
             .map(res => res.json())
             .map(({name, moves, abilities, stats, id, location_area_encounters, weight, height, species}) =>
@@ -40,13 +45,13 @@ export class PokemonService {
 
                 return this.http.get(pokeData.species.url)
                     .map(res => res.json())
-                    .map(({capture_rate, order, is_baby, has_gender_differences, evolves_from_species, evolution_chain}) =>
-                        ({capture_rate, order, is_baby, has_gender_differences, evolves_from_species, evolution_chain}))
+                    .map(({capture_rate, is_baby, has_gender_differences, evolves_from_species, evolution_chain}) =>
+                        ({capture_rate, is_baby, has_gender_differences, evolves_from_species, evolution_chain}))
                     .flatMap(speciesData => {
 
                         return this.http.get(speciesData.evolution_chain.url)
                             .map(res => res.json())
-                            .map(evoData => Object.assign(pokeData, speciesData, evoData));
+                            .map(evoData => Object.assign(pokeData, speciesData, evoData, {order: pokeNum}));
                     })
             });
     }
