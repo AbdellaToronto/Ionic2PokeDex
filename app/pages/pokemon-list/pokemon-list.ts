@@ -46,7 +46,7 @@ export class PokemonList {
     }
 
     openDetails(pokemon) {
-        this.pokeService.getPokemonByUrl(pokemon.url)
+        this.pokeService.getPokemon(pokemon.url)
             .map(pokemon => {
                 console.log(pokemon);
                 return pokemon;

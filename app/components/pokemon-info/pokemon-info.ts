@@ -37,10 +37,23 @@ import {EvolutionTree} from "../evolution-tree/evolution-tree";
 
         <img src="http://pokeapi.co/media/img/{{pokemon.order}}.png" (click)="close()"/>
 
-          <ion-card-content>
-            <h2 class="card-title">{{pokemon.name}}</h2>
+        <div padding>
+          <ion-segment [(ngModel)]="tab">
+            <ion-segment-button value="Stats">
+              Stats
+            </ion-segment-button>
+            <ion-segment-button value="Location">
+              Location
+            </ion-segment-button>
+            <ion-segment-button value="Evolution">
+              Evolution
+            </ion-segment-button>
+          </ion-segment>
+        </div>
 
-            <evo-tree [chain]="pokemon.chain"></evo-tree>
+        <div [ngSwitch]="tab">
+          <ion-card-content *ngSwitchWhen="'Stats'">
+            <h2 class="card-title">{{pokemon.name}}</h2>
 
             <ion-list no-lines class="stat-list">
               <h2>Base Stats</h2>
@@ -50,11 +63,24 @@ import {EvolutionTree} from "../evolution-tree/evolution-tree";
               </ion-item>
             </ion-list>
           </ion-card-content>
+
+          <ion-card-content *ngSwitchWhen="'Location'">
+          </ion-card-content>
+
+          <ion-card-content *ngSwitchWhen="'Evolution'">
+              <evo-tree [chain]="pokemon.chain"></evo-tree>
+          </ion-card-content>
+
+        </div>
+
         </ion-card>
         `
 })
 export class PokemonInfo {
     @Input() pokemon: Object;
+
+    tab: String = 'Stats';
+
     constructor(private navParams: NavParams, private viewCtrl: ViewController){
         this.pokemon = navParams.get('pokemon');
     }
